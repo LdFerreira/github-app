@@ -21,7 +21,7 @@ export default class Main extends Component {
             autoCorrect={false}
             autoCapitalize="none"
             value={newUser}
-            placeholder="Minha namorada é maravilhosa"
+            placeholder="Adicione um usuario"
             onChangeText={text => this.setState({ newUser: text })}
             returnKeyType="send"
             onSubmitEditing={this.handleAddUser}
