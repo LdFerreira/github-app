@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { View } from 'react-native';
+import api from '../../services/api';
 
 import { Container, Form, Input, SubmitButton } from './styles';
 
