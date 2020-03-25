@@ -17,6 +17,7 @@ import {
   Bio,
   ProfileButton,
   ProfileButtonText,
+  ClearButton,
 } from './styles';
 
 export default class Main extends Component {
@@ -52,25 +53,40 @@ export default class Main extends Component {
     }
   }
 
+  clearAsyncStorage = async () => {
+    AsyncStorage.clear();
+  };
+
   handleAddUser = async () => {
     const { users, newUser } = this.state;
-    this.setState({ loading: true });
-    const response = await api.get(`/users/${newUser}`);
+    if (newUser !== '') {
+      this.setState({ loading: true });
+      try {
+        const response = await api.get(`/users/${newUser}`);
+        const data = {
+          name: response.data.name,
+          login: response.data.login,
+          bio: response.data.bio,
+          avatar: response.data.avatar_url,
+        };
 
-    const data = {
-      name: response.data.name,
-      login: response.data.login,
-      bio: response.data.bio,
-      avatar: response.data.avatar_url,
-    };
+        this.setState({
+          users: [...users, data],
+          newUser: '',
+          loading: false,
+        });
 
-    this.setState({
-      users: [...users, data],
-      newUser: '',
-      loading: false,
-    });
-
-    Keyboard.dismiss();
+        Keyboard.dismiss();
+      } catch (error) {
+        this.setState({
+          newUser: '',
+          loading: false,
+        });
+        alert('Usuario invalido, tente novamente!');
+      }
+    } else {
+      alert('Insira um usuario por favor!');
+    }
   };
 
   handleNavigate = user => {
@@ -100,6 +116,13 @@ export default class Main extends Component {
               <Icon name="add" size={20} color="#FFF" />
             )}
           </SubmitButton>
+          <ClearButton loading={loading} onPress={this.clearAsyncStorage}>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Icon name="block" size={20} color="#FFF" />
+            )}
+          </ClearButton>
         </Form>
         <List
           data={users}
