@@ -54,14 +54,20 @@ export default class Main extends Component {
   }
 
   clearAsyncStorage = async () => {
+    this.setState({ loading: true });
     AsyncStorage.clear();
+    this.setState({
+      users: [],
+      newUser: '',
+      loading: false,
+    });
   };
 
   handleAddUser = async () => {
     const { users, newUser } = this.state;
     if (newUser !== '') {
-      this.setState({ loading: true });
       try {
+        this.setState({ loading: true });
         const response = await api.get(`/users/${newUser}`);
         const data = {
           name: response.data.name,
